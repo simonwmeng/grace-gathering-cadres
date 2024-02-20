@@ -17,7 +17,13 @@ conda env create -f environment.yaml
 
 ### Without *conda*
 
-TODO: Add this section
+Create a new environment, activate it, and install the required packages:
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install .
+```
 
 ## Generating cadres
 
@@ -33,8 +39,8 @@ forbidden-groups: (list[list[str]]) people to avoid grouping together
 The generator may not always be able to avoid generating forbidden groups depending on
 what preferred and forbidden groups you specify.
 
-To generate cadres, activate the enviroment (e.g., `conda activate gg-cadres`) and run
-the following:
+To generate cadres, activate the enviroment (e.g., `conda activate gg-cadres` or `source
+.venv/bin/activate`) and run the following:
 
 ```bash
 gg-cadres -i <specification.yaml> [-o <output.yaml>] [-s <seed>]
