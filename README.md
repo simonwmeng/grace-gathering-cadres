@@ -21,7 +21,7 @@ TODO: Add this section
 
 ## Generating cadres
 
-You will need to create a YAML file matching the following specification:
+Create a YAML file matching the following specification:
 
 ```yaml
 people: (list[str]) the people to divide into cadres

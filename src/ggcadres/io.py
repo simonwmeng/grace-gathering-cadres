@@ -1,3 +1,5 @@
+"""Input/output."""
+
 from typing import IO
 
 import yaml
@@ -7,6 +9,14 @@ OPTIONAL_KEYS = {"preferred-groups", "forbidden-groups"}
 
 
 def read_specification(handle: IO) -> dict:
+    """Read a specification.
+
+    Args:
+        handle: A handle to a YAML file.
+
+    Returns:
+        The loaded specification.
+    """
     res = yaml.safe_load(handle)
 
     # Ensure that only certain keys exist.

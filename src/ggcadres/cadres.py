@@ -1,3 +1,5 @@
+"""Cadre generation."""
+
 import itertools as it
 import math
 import random
@@ -8,6 +10,18 @@ import networkx as nx
 
 
 class CadreGenerator:
+    """Generator for cadres.
+
+    Attributes:
+        people: A collection of people.
+        forbidden_groups: A collection of groups (lists) of people to avoid groupnig
+            together.
+        preferred_groups: A collection of groups (lists) of people to always group
+            together.
+        num_groups: The number of cadres to generate.
+        seed: The seed for random number generation.
+    """
+
     def __init__(
         self,
         people: Collection[str],
@@ -17,6 +31,7 @@ class CadreGenerator:
         num_groups: int,
         seed: int,
     ) -> None:
+        """Create an instance."""
         self.people = set(people)
         self.forbidden_groups: set[frozenset[str]] = (
             {frozenset(group) for group in forbidden_groups}
@@ -33,10 +48,12 @@ class CadreGenerator:
 
     @property
     def _cadre_size(self) -> int:
+        """The optimal size for each cadre."""
         return math.ceil(len(self.people) / self.num_groups)
 
     @cached_property
     def _graph(self) -> nx.Graph:
+        """The current graph underlying this generator."""
         graph = nx.Graph()
 
         # Compute forbidden pairings.
@@ -60,6 +77,15 @@ class CadreGenerator:
         return graph
 
     def _get_clique(self, seed_person: str, num_people: int) -> list[str] | None:
+        """Generate a clique containing a person.
+
+        Args:
+            seed_person: The person the clique must contain.
+            num_people: The number of people in the clique.
+
+        Returns:
+            A list of people, or None if a clique cannot be generated.
+        """
         # find_cliques is non-deterministic. We need to make it so.
 
         candidate_cliques = sorted(
@@ -75,6 +101,11 @@ class CadreGenerator:
         return clique
 
     def generate(self) -> list[list[str]]:
+        """Generate cliques.
+
+        Returns:
+            A list of cliques.
+        """
         remaining_people = set(self.people)
         cadres = []
 
@@ -125,20 +156,5 @@ class CadreGenerator:
                 clique.append(next_person)
 
             cadres.append(sorted(clique))
-
-            # try:
-            #     # find_cliques is non-deterministic. We need to make it so.
-
-            #     candidate_cliques = sorted(
-            #         sorted(clique)
-            #         for clique in nx.find_cliques(self._graph, nodes=[seed_person])
-            #         if len(clique) == this_size
-            #     )
-            #     clique = random.choice(candidate_cliques)
-            #     cadres.append(clique)
-            #     self._graph.remove_nodes_from(clique)
-
-            # except StopIteration:
-            #     1 / 0
 
         return cadres
